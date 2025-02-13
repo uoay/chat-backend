@@ -1,3 +1,6 @@
 spring:
     application:
         name: 'chat'
+    jpa:
+        hibernate:
+            ddl-auto: 'create-drop'
