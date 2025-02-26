@@ -16,8 +16,11 @@ public class RegistrationService {
     private PasswordEncoder passwordEncoder;
 
     public void registerUserAccount(RegistrationRequest request) throws IllegalStateException {
-        String encodedPassword = passwordEncoder.encode(request.password);
-        Account account = new Account(request.username, encodedPassword, request.display_name);
+        Account account = new Account(
+            request.username,
+            passwordEncoder.encode(request.password),
+            new Profile(request.display_name)
+        );
         accountService.register(account);
     }
 }

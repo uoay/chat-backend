@@ -1,4 +1,4 @@
-package net.uoay.chat.auth;
+package net.uoay.chat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+
+import net.uoay.chat.auth.LoginService;
 import net.uoay.chat.request.LoginRequest;
 
 @RestController

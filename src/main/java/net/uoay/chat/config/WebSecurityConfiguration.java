@@ -42,8 +42,8 @@ public class WebSecurityConfiguration {
             .requestCache(RequestCacheConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/registration/**").permitAll()
-                    .requestMatchers("/login/**").permitAll()
+                    .requestMatchers("/register").permitAll()
+                    .requestMatchers("/login").permitAll()
                     .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement ->
@@ -70,7 +70,6 @@ public class WebSecurityConfiguration {
         return new HttpSessionSecurityContextRepository();
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -88,7 +87,6 @@ public class WebSecurityConfiguration {
     public AuthenticationEventPublisher authenticationEventPublisher() {
         return new DefaultAuthenticationEventPublisher();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(

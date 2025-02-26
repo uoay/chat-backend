@@ -1,13 +1,15 @@
 package net.uoay.chat.request;
 
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
+import net.uoay.chat.Utils;
+
 
 public class LoginRequest {
 
-    @Size(min = 1, max = 16)
+    @Pattern(regexp = Utils.usernamePattern, message = Utils.usernameInvalidMessage)
     public String username;
 
-    @Size(min = 8, max = 16)
+    @Pattern(regexp = Utils.passwordPattern, message = Utils.passwordInvalidMessage)
     public String password;
 
     public LoginRequest(String username, String password) {

@@ -1,4 +1,4 @@
-package net.uoay.chat.user;
+package net.uoay.chat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+
 import net.uoay.chat.request.RegistrationRequest;
+import net.uoay.chat.user.RegistrationService;
 
 @RestController
-@RequestMapping("/registration")
+@RequestMapping("/register")
 public class RegistrationController {
 
     @Autowired
@@ -28,7 +30,7 @@ public class RegistrationController {
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleIllegalStateException(IllegalStateException exception) {
         return exception.getMessage();
     }
