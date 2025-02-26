@@ -1,4 +1,4 @@
-package net.uoay.chat.configuration;
+package net.uoay.chat.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
