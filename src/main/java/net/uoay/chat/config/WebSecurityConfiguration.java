@@ -1,13 +1,10 @@
 package net.uoay.chat.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,21 +18,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+
 import jakarta.servlet.http.HttpServletResponse;
-import net.uoay.chat.user.AccountService;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
-    @Autowired
-    private AccountService accountService;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
-            .authenticationProvider(authenticationProvider())
             .securityContext(securityContext ->
                 securityContext.securityContextRepository(securityContextRepository())
             )
@@ -46,7 +39,7 @@ public class WebSecurityConfiguration {
                     .requestMatchers("/login").permitAll()
                     .anyRequest().authenticated()
             )
-            .sessionManagement(sessionManagement ->
+            .sessionManagement((sessionManagement) ->
                 sessionManagement
                     .sessionFixation(SessionFixationConfigurer::newSession)
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -73,14 +66,6 @@ public class WebSecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(accountService);
-        return provider;
     }
 
     @Bean

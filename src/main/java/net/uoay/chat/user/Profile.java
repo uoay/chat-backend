@@ -1,5 +1,6 @@
 package net.uoay.chat.user;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -12,12 +13,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 
 import net.uoay.chat.Utils;
 
 @Entity
-public class Profile {
+@Table(name = "user_profile")
+public class Profile implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

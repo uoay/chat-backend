@@ -1,23 +1,29 @@
 package net.uoay.chat.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-
-import net.uoay.chat.websocket.EchoHandler;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.session.Session;
+import org.springframework.session.web.socket.config.annotation.AbstractSessionWebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 @Configuration
-@EnableWebSocket
-public class WebSocketConfiguration implements WebSocketConfigurer {
-
-    @Autowired
-    EchoHandler echoHandler;
+@EnableWebSocketMessageBroker
+@EnableScheduling
+public class WebSocketConfiguration extends AbstractSessionWebSocketMessageBrokerConfigurer<Session> {
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(echoHandler, "/echo");
+    public void configureStompEndpoints(StompEndpointRegistry registry) {
+        registry
+            .addEndpoint("/")
+            .setAllowedOrigins("*");
+	}
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/user");
+        registry.setApplicationDestinationPrefixes("/app");
     }
 
 }
