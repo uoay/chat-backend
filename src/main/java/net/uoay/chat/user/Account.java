@@ -3,6 +3,7 @@ package net.uoay.chat.user;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -49,6 +50,19 @@ public class Account implements UserDetails {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Account) {
+            return Objects.equals(username, ((Account)obj).username);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
+    }
 
     public Account() {}
 
