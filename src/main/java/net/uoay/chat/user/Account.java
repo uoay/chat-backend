@@ -3,6 +3,7 @@ package net.uoay.chat.user;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -21,8 +23,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import net.uoay.chat.friend.Friendship;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -50,6 +55,10 @@ public class Account implements UserDetails {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @Column
+    private List<Friendship> friendships;
 
     @Override
     public boolean equals(Object obj) {
@@ -108,6 +117,23 @@ public class Account implements UserDetails {
 
     public LocalDateTime getCreatedDate() {
         return createdDate;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public List<String> getFriends() {
+        return friendships
+            .stream()
+            .map(friendship -> {
+                return friendship.getAnother(username).get();
+            })
+            .toList();
+    }
+
+    public void addFriend(Friendship friendship) {
+        friendships.add(friendship);
     }
 
 }

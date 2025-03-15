@@ -4,7 +4,6 @@ spring:
     jpa:
         hibernate:
             ddl-auto: 'create-drop'
-        open-in-view: false
     session:
         store-type: 'redis'
     data:
