@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -59,10 +60,15 @@ public class Friendship implements Serializable {
     public Optional<String> getAnother(String username) {
         if (fromAccount.getUsername() == username) {
             return Optional.of(toAccount.getUsername());
-        }else if (toAccount.getUsername() == username) {
+        } else if (toAccount.getUsername() == username) {
            return Optional.of(fromAccount.getUsername());
         }
         return Optional.ofNullable(null);
+    }
+
+    public void remove() {
+        fromAccount.removeFriend(this);
+        toAccount.removeFriend(this);
     }
 
 }

@@ -136,4 +136,8 @@ public class Account implements UserDetails {
         friendships.add(friendship);
     }
 
+    public boolean removeFriend(Friendship friendship) {
+        return friendships.remove(friendship);
+    }
+
 }
