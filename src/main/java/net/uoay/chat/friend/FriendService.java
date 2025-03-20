@@ -61,4 +61,13 @@ public class FriendService {
 
     }
 
+    @Transactional
+    public boolean isFriend(String username, String another) throws NoSuchElementException {
+        var account = accountRepository.findByUsername(username).orElseThrow();
+        if (account.hasFriend(another)) {
+            return true;
+        }
+        return false;
+    }
+
 }

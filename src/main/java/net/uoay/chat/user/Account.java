@@ -140,4 +140,8 @@ public class Account implements UserDetails {
         return friendships.remove(friendship);
     }
 
+    public boolean hasFriend(String username) {
+        return getFriends().contains(username);
+    }
+
 }
