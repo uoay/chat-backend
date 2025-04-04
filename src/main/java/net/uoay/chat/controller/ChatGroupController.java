@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import net.uoay.chat.group.ChatGroup;
 import net.uoay.chat.group.ChatGroupService;
 import net.uoay.chat.request.CreateChatGroupRequest;
-import net.uoay.chat.request.JoinOrLeaveChatGroupRequest;
+import net.uoay.chat.request.ChatGroupRequest;
 import net.uoay.chat.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,13 +33,18 @@ public class ChatGroupController {
     }
 
     @PutMapping("/groups/join")
-    public void joinGroup(@RequestBody @Valid JoinOrLeaveChatGroupRequest request) {
+    public void joinGroup(@RequestBody @Valid ChatGroupRequest request) {
         chatGroupService.joinGroup(request.id, accountService.getUsername());
     }
 
     @PutMapping("/groups/leave")
-    public void leaveGroup(@RequestBody @Valid JoinOrLeaveChatGroupRequest request) {
+    public void leaveGroup(@RequestBody @Valid ChatGroupRequest request) {
         chatGroupService.leaveGroup(request.id, accountService.getUsername());
+    }
+
+    @DeleteMapping("groups/delete")
+    public void deleteGroup(@RequestBody @Valid ChatGroupRequest request) {
+        chatGroupService.deleteGroup(request.id, accountService.getUsername());
     }
 
 }

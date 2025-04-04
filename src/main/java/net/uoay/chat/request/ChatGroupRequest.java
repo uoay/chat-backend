@@ -1,5 +1,5 @@
 package net.uoay.chat.request;
 
-public class JoinOrLeaveChatGroupRequest {
+public class ChatGroupRequest {
     public Integer id;
 }

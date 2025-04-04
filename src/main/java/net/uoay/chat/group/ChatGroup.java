@@ -100,4 +100,9 @@ public class ChatGroup {
     public boolean contains(Account account) {
         return members.contains(account);
     }
+
+    public Set<Account> getMembers() {
+        return members;
+    }
+
 }

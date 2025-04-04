@@ -50,10 +50,12 @@ public class ChatGroupService {
     public void leaveGroup(Integer id, String username) {
         var account = accountRepository.findByUsername(username).orElseThrow();
         var group = chatGroupRepository.findById(id).orElseThrow();
-        group.removeMember(account);
-        account.leaveGroup(group);
-        chatGroupRepository.save(group);
-        accountRepository.save(account);
+        if (group.isOwner(account)) {
+            group.removeMember(account);
+            account.leaveGroup(group);
+            chatGroupRepository.save(group);
+            accountRepository.save(account);
+        }
     }
 
     @Transactional
@@ -61,5 +63,15 @@ public class ChatGroupService {
         Account account = accountRepository.findByUsername(username).orElseThrow();
         ChatGroup group = chatGroupRepository.findById(groupId).orElseThrow();
         return group.contains(account);
+    }
+
+    @Transactional
+    public void deleteGroup(Integer id, String username) {
+        var account = accountRepository.findByUsername(username).orElseThrow();
+        var group = chatGroupRepository.findById(id).orElseThrow();
+        if (group.isOwner(account)) {
+            group.getMembers().forEach(a -> a.leaveGroup(group));
+            chatGroupRepository.delete(group);
+        }
     }
 }
