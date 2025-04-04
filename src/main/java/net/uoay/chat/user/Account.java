@@ -3,8 +3,10 @@ package net.uoay.chat.user;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +30,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import net.uoay.chat.friend.Friendship;
+import net.uoay.chat.group.ChatGroup;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -59,6 +62,10 @@ public class Account implements UserDetails {
     @ManyToMany(cascade = CascadeType.ALL)
     @Column
     private List<Friendship> friendships;
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @Column
+    private Set<ChatGroup> groups;
 
     @Override
     public boolean equals(Object obj) {
@@ -142,6 +149,18 @@ public class Account implements UserDetails {
 
     public boolean hasFriend(String username) {
         return getFriends().contains(username);
+    }
+
+    public Set<ChatGroup> getGroups() {
+        return groups;
+    }
+
+    public boolean joinGroup(ChatGroup group) {
+        return groups.add(group);
+    }
+
+    public boolean leaveGroup(ChatGroup group) {
+        return groups.remove(group);
     }
 
 }
