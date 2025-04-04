@@ -1,17 +1,15 @@
 package net.uoay.chat.controller;
 
-import java.time.LocalDateTime;
-
+import jakarta.validation.Valid;
+import net.uoay.chat.user.AccountService;
+import net.uoay.chat.user.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-
-import net.uoay.chat.user.AccountService;
-import net.uoay.chat.user.Profile;
+import java.time.LocalDateTime;
 
 @RestController
 public class AccountController {

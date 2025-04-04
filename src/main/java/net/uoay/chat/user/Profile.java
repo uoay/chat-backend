@@ -1,22 +1,13 @@
 package net.uoay.chat.user;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import net.uoay.chat.Utils;
+import org.springframework.lang.Nullable;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
-
-import org.springframework.lang.Nullable;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Pattern;
-
-import net.uoay.chat.Utils;
 
 @Entity
 @Table(name = "user_profile")

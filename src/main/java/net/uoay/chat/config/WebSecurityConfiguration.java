@@ -1,5 +1,7 @@
 package net.uoay.chat.config;
 
+import jakarta.servlet.http.HttpServletResponse;
+import net.uoay.chat.auth.LoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +27,6 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
-
-import jakarta.servlet.http.HttpServletResponse;
-
-import net.uoay.chat.auth.LoginFilter;
 
 @Configuration
 @EnableWebSecurity

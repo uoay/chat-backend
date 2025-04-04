@@ -1,14 +1,13 @@
 package net.uoay.chat.friend;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import net.uoay.chat.user.AccountRepository;
+import net.uoay.chat.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.uoay.chat.user.AccountRepository;
-import net.uoay.chat.user.AccountService;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component
 public class FriendService {

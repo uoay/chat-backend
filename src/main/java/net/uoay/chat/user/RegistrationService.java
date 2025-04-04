@@ -1,10 +1,9 @@
 package net.uoay.chat.user;
 
+import net.uoay.chat.request.RegistrationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import net.uoay.chat.request.RegistrationRequest;
 
 @Service
 public class RegistrationService {

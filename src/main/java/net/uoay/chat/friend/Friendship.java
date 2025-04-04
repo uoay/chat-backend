@@ -1,22 +1,13 @@
 package net.uoay.chat.friend;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import jakarta.persistence.*;
+import net.uoay.chat.user.Account;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
-
-import net.uoay.chat.user.Account;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
