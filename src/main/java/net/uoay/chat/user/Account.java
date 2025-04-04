@@ -1,36 +1,16 @@
 package net.uoay.chat.user;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
+import jakarta.persistence.*;
+import net.uoay.chat.friend.Friendship;
+import net.uoay.chat.group.ChatGroup;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-import net.uoay.chat.friend.Friendship;
-import net.uoay.chat.group.ChatGroup;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -63,7 +43,7 @@ public class Account implements UserDetails {
     @Column
     private List<Friendship> friendships;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @Column
     private Set<ChatGroup> groups;
 
@@ -86,6 +66,7 @@ public class Account implements UserDetails {
         this.username = username;
         this.password = password;
         this.profile = profile;
+        groups = new HashSet<>();
     }
 
     @Override
@@ -161,6 +142,10 @@ public class Account implements UserDetails {
 
     public boolean leaveGroup(ChatGroup group) {
         return groups.remove(group);
+    }
+
+    public boolean isInGroup(ChatGroup group) {
+        return groups.contains(group);
     }
 
 }

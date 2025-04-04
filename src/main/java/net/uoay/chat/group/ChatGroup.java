@@ -1,26 +1,14 @@
 package net.uoay.chat.group;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import net.uoay.chat.user.Account;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-import net.uoay.chat.user.Account;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -36,7 +24,7 @@ public class ChatGroup {
 
     @ManyToMany
     @JsonIgnore
-    private Set<Account> members = new HashSet<>();
+    private Set<Account> members;
 
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -45,7 +33,7 @@ public class ChatGroup {
 
     @ManyToMany
     @JsonIgnore
-    private Set<Account> admins = new HashSet<>();
+    private Set<Account> admins;
 
     @CreatedDate
     @Column(nullable = false)
@@ -57,6 +45,9 @@ public class ChatGroup {
     public ChatGroup(Account owner, String displayName) {
         this.owner = owner;
         this.displayName = displayName;
+        members = new HashSet<>();
+        members.add(owner);
+        admins = new HashSet<>();
     }
 
     public String getDisplayName() {
@@ -104,5 +95,9 @@ public class ChatGroup {
 
     public boolean isAdmin(Account account) {
         return admins.contains(account);
+    }
+
+    public boolean contains(Account account) {
+        return members.contains(account);
     }
 }
