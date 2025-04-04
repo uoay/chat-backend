@@ -133,8 +133,11 @@ public class Account implements UserDetails {
         return getFriends().contains(username);
     }
 
-    public Set<ChatGroup> getGroups() {
-        return groups;
+    public Set<String> getGroups() {
+        return groups
+            .stream()
+            .map(group -> String.valueOf(group.getId()))
+            .collect(Collectors.toSet());
     }
 
     public boolean joinGroup(ChatGroup group) {

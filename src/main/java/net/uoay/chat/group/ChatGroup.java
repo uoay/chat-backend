@@ -50,6 +50,10 @@ public class ChatGroup {
         admins = new HashSet<>();
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getDisplayName() {
         return displayName;
     }

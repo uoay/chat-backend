@@ -8,6 +8,7 @@ import net.uoay.chat.request.ChatGroupRequest;
 import net.uoay.chat.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -28,23 +29,30 @@ public class ChatGroupController {
     }
 
     @GetMapping("/groups")
-    public Set<ChatGroup> getGroups() {
+    public Set<String> getGroups() {
         return chatGroupService.getGroups(accountService.getUsername());
     }
 
     @PutMapping("/groups/join")
     public void joinGroup(@RequestBody @Valid ChatGroupRequest request) {
-        chatGroupService.joinGroup(request.id, accountService.getUsername());
+        chatGroupService.joinGroup(Integer.valueOf(request.id), accountService.getUsername());
     }
 
     @PutMapping("/groups/leave")
     public void leaveGroup(@RequestBody @Valid ChatGroupRequest request) {
-        chatGroupService.leaveGroup(request.id, accountService.getUsername());
+        chatGroupService.leaveGroup(Integer.valueOf(request.id), accountService.getUsername());
     }
 
     @DeleteMapping("groups/delete")
     public void deleteGroup(@RequestBody @Valid ChatGroupRequest request) {
-        chatGroupService.deleteGroup(request.id, accountService.getUsername());
+        chatGroupService.deleteGroup(Integer.valueOf(request.id), accountService.getUsername());
+    }
+
+    @GetMapping("group/{group_id}/members")
+    public Set<String> getGroupMembers(
+        @DestinationVariable("group_id") Integer groupId
+    ) {
+        return chatGroupService.getMembers(groupId);
     }
 
 }
