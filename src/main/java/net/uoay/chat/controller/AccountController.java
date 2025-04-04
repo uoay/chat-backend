@@ -1,6 +1,7 @@
 package net.uoay.chat.controller;
 
 import jakarta.validation.Valid;
+import net.uoay.chat.Utils;
 import net.uoay.chat.user.AccountService;
 import net.uoay.chat.user.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @RestController
 public class AccountController {
@@ -18,8 +20,13 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping("/profile")
-    public Profile getProfile() {
-        return accountService.getProfile();
+    public Profile getProfile(
+        @RequestBody String username
+    ) throws NoSuchElementException, IllegalArgumentException {
+        if (username.matches(Utils.usernamePattern)) {
+            return accountService.getProfile(username).orElseThrow();
+        }
+        throw new IllegalArgumentException();
     }
 
     @PostMapping("/profile")

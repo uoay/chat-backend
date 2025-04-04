@@ -27,4 +27,10 @@ public class HttpRequestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {}
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleIllegalArgumentException() {
+        return "illegal argument(s)";
+    }
+
 }
