@@ -3,14 +3,18 @@ package net.uoay.chat.friend;
 import net.uoay.chat.user.AccountRepository;
 import net.uoay.chat.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Component
 public class FriendService {
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -21,11 +25,17 @@ public class FriendService {
     @Autowired
     private AccountService accountService;
 
-    public List<String> getFriends() {
-        return accountRepository
-            .findByUsername(accountService.getUsername())
-            .get()
-            .getFriends();
+    public Set<String> getFriends(String username) {
+        var key = username + ":friends_set";
+        if (!stringRedisTemplate.hasKey(key)) {
+            var account =  accountRepository.findByUsername(username).orElseThrow();
+            var friendsSet = account.getFriends();
+            friendsSet.forEach(name ->
+                stringRedisTemplate.opsForSet().add(key, name)
+            );
+            return friendsSet;
+        };
+        return stringRedisTemplate.opsForSet().members(key);
     }
 
     @Transactional
@@ -37,6 +47,9 @@ public class FriendService {
 
         fromAccount.addFriend(friendship);
         toAccount.addFriend(friendship);
+
+        stringRedisTemplate.delete(fromUser + ":friends_set");
+        stringRedisTemplate.delete(toUser + ":friends_set");
     }
 
     @Transactional
@@ -57,6 +70,9 @@ public class FriendService {
                 friendship.remove();
                 friendshipRepository.delete(friendship);
             });
+
+        stringRedisTemplate.opsForSet().remove(source + ":friends_set", target);
+        stringRedisTemplate.opsForSet().remove(target + ":friends_set", source);
 
     }
 

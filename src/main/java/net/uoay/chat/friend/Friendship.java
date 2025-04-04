@@ -42,19 +42,17 @@ public class Friendship implements Serializable {
     }
 
     public boolean contains(String username) {
-        if (fromAccount.getUsername() == username || toAccount.getUsername() == username) {
-            return true;
-        }
-        return false;
+        return fromAccount.getUsername().equals(username)
+            || toAccount.getUsername().equals(username);
     }
 
     public Optional<String> getAnother(String username) {
-        if (fromAccount.getUsername() == username) {
+        if (fromAccount.getUsername().equals(username)) {
             return Optional.of(toAccount.getUsername());
-        } else if (toAccount.getUsername() == username) {
+        } else if (toAccount.getUsername().equals(username)) {
            return Optional.of(fromAccount.getUsername());
         }
-        return Optional.ofNullable(null);
+        return Optional.empty();
     }
 
     public void remove() {

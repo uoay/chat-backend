@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -41,7 +42,7 @@ public class Account implements UserDetails {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @Column
-    private List<Friendship> friendships;
+    private Set<Friendship> friendships;
 
     @ManyToMany
     @Column
@@ -111,13 +112,13 @@ public class Account implements UserDetails {
         return id;
     }
 
-    public List<String> getFriends() {
+    public Set<String> getFriends() {
         return friendships
             .stream()
             .map(friendship -> {
-                return friendship.getAnother(username).get();
+                return friendship.getAnother(username).orElseThrow();
             })
-            .toList();
+            .collect(Collectors.toSet());
     }
 
     public void addFriend(Friendship friendship) {

@@ -1,6 +1,7 @@
 package net.uoay.chat.controller;
 
 import net.uoay.chat.friend.FriendService;
+import net.uoay.chat.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,16 +9,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @RestController
 public class FriendController {
 
     @Autowired
-    FriendService friendService;
+    private AccountService accountService;
+
+    @Autowired
+    private FriendService friendService;
 
     @GetMapping("/friends")
-    public List<String> getFriends() {
-        return friendService.getFriends();
+    public Set<String> getFriends() {
+        return friendService.getFriends(accountService.getUsername());
     }
 
     @PostMapping("/friends")
