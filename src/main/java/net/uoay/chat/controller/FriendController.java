@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -25,10 +24,13 @@ public class FriendController {
         return friendService.getFriends(accountService.getUsername());
     }
 
-    @PostMapping("/friends")
+    @PutMapping("/friends")
     public void addFriend(@RequestBody String toUser) throws NoSuchElementException {
         var fromUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        friendService.addFriend(fromUser, toUser);
+        if (!fromUser.equals(toUser)) {
+            friendService.addFriend(fromUser, toUser);
+        }
+
     }
 
     @DeleteMapping("/friends")

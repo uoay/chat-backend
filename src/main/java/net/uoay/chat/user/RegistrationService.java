@@ -16,9 +16,9 @@ public class RegistrationService {
 
     public void registerUserAccount(RegistrationRequest request) throws IllegalStateException {
         Account account = new Account(
-            request.username,
-            passwordEncoder.encode(request.password),
-            new Profile(request.display_name)
+            request.username(),
+            passwordEncoder.encode(request.password()),
+            new Profile(request.display_name())
         );
         accountService.register(account);
     }

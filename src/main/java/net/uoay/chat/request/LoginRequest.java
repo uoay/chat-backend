@@ -3,27 +3,9 @@ package net.uoay.chat.request;
 import jakarta.validation.constraints.Pattern;
 import net.uoay.chat.Utils;
 
-public class LoginRequest {
-
+public record LoginRequest(
     @Pattern(regexp = Utils.usernamePattern, message = Utils.usernameInvalidMessage)
-    public String username;
-
+    String username,
     @Pattern(regexp = Utils.passwordPattern, message = Utils.passwordInvalidMessage)
-    public String password;
-
-    public LoginRequest() {};
-
-    public LoginRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-}
+    String password
+) {}

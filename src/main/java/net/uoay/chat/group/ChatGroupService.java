@@ -1,12 +1,10 @@
 package net.uoay.chat.group;
 
 import jakarta.transaction.Transactional;
+import net.uoay.chat.Utils;
 import net.uoay.chat.user.Account;
 import net.uoay.chat.user.AccountRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +35,7 @@ public class ChatGroupService {
 
     public Set<String> getGroups(String username) {
         var account = accountRepository.findByUsername(username).orElseThrow();
-        var key = username + ":chatGroupSet";
+        var key = Utils.chatGroupSetKey(username);
         if (!stringRedisTemplate.hasKey(key)) {
             var groups = account.getGroups();
             groups.forEach(id ->
@@ -56,7 +54,7 @@ public class ChatGroupService {
         account.joinGroup(group);
         chatGroupRepository.save(group);
         accountRepository.save(account);
-        stringRedisTemplate.delete(username + ":chatGroupSet");
+        stringRedisTemplate.delete(Utils.chatGroupSetKey(username));
     }
 
     @Transactional
@@ -69,7 +67,7 @@ public class ChatGroupService {
             chatGroupRepository.save(group);
             accountRepository.save(account);
             stringRedisTemplate.opsForSet().remove(
-                username + ":chatGroupSet",
+                Utils.chatGroupSetKey(username),
                 String.valueOf(group.getId())
             );
         }
@@ -91,7 +89,7 @@ public class ChatGroupService {
             chatGroupRepository.delete(group);
             members.forEach(a ->
                 stringRedisTemplate.opsForSet().remove(
-                    a.getUsername() + ":chatGroupSet",
+                    Utils.chatGroupSetKey(a.getUsername()),
                     String.valueOf(id)
                 )
             );
@@ -100,7 +98,7 @@ public class ChatGroupService {
 
     public Set<String> getMembers(Integer id) {
         var group = chatGroupRepository.findById(id).orElseThrow();
-        var key = "chatGroup:" + id;
+        var key = Utils.chatGroupMemberSetKey(String.valueOf(id));
         if (!stringRedisTemplate.hasKey(key)) {
             var members = group
                 .getMembers()

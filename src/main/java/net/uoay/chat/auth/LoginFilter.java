@@ -23,14 +23,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         HttpServletResponse response
     ) throws AuthenticationException {
         if (!request.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+            throw new AuthenticationServiceException(
+                "Authentication method not supported: " + request.getMethod()
+            );
         }
 
         if (!request.getContentType().equals("application/json")) {
             throw new AuthenticationServiceException("Illegal content type");
         }
 
-        LoginRequest loginRequest = null;
+        LoginRequest loginRequest;
         try {
             var stream = request.getInputStream();
             loginRequest = new ObjectMapper().readValue(stream, LoginRequest.class);
@@ -39,8 +41,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         }
 
         var authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
-            loginRequest.username,
-            loginRequest.password
+            loginRequest.username(),
+            loginRequest.password()
         );
 
         setDetails(request, authRequest);

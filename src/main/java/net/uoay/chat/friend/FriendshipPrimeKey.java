@@ -24,8 +24,7 @@ public class FriendshipPrimeKey implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof FriendshipPrimeKey) {
-            var key = (FriendshipPrimeKey) obj;
+        if (obj instanceof FriendshipPrimeKey key) {
             return this == obj
                 || Objects.equals(key.fromAccountId, fromAccountId)
                 && Objects.equals(key.toAccountId, toAccountId);

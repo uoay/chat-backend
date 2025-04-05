@@ -10,4 +10,16 @@ public class Utils {
     public static final String passwordInvalidMessage = "Invalid password";
     public static final String displayNameInvalidMessage = "Invalid display name";
 
+    public static String friendSetKey(String username) {
+        return username + ":friendSet";
+    }
+
+    public static String chatGroupSetKey(String username) {
+        return username + ":chatGroupSet";
+    }
+
+    public static String chatGroupMemberSetKey(String groupId) {
+        return "chatGroupMemberSet:" + groupId;
+    }
+
 }

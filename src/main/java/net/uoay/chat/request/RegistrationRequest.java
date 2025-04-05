@@ -3,15 +3,11 @@ package net.uoay.chat.request;
 import jakarta.validation.constraints.Pattern;
 import net.uoay.chat.Utils;
 
-public final class RegistrationRequest {
-
+public record RegistrationRequest(
     @Pattern(regexp = Utils.usernamePattern, message = Utils.usernameInvalidMessage)
-    public String username;
-
+    String username,
     @Pattern(regexp = Utils.passwordPattern, message = Utils.passwordInvalidMessage)
-    public String password;
-
+    String password,
     @Pattern(regexp = Utils.displayNamePattern, message = Utils.displayNameInvalidMessage)
-    public String display_name;
-
-}
+    String display_name
+) {}
