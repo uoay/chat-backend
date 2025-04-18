@@ -1,7 +1,10 @@
 package net.uoay.chat.friend;
 
 import net.uoay.chat.Utils;
+import net.uoay.chat.redis.RedisService;
 import net.uoay.chat.user.AccountRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -22,23 +25,28 @@ public class FriendService {
     @Autowired
     private FriendshipRepository friendshipRepository;
 
+    @Autowired
+    private RedisService redisService;
+
     public Set<String> getFriends(String username) {
-        var key = Utils.friendSetKey(username);
-        if (!stringRedisTemplate.hasKey(key)) {
-            var account =  accountRepository.findByUsername(username).orElseThrow();
-            var friendsSet = account.getFriends();
-            friendsSet.forEach(name ->
-                stringRedisTemplate.opsForSet().add(key, name)
-            );
-            return friendsSet;
-        }
-        return stringRedisTemplate.opsForSet().members(key);
+        return redisService
+            .getSetIfExists(Utils.friendSetKey(username))
+            .orElseGet(() -> {
+                var account =  accountRepository.findByUsername(username).orElseThrow();
+                var friends = account.getFriends();
+                redisService.createStringSet(Utils.friendSetKey(username), friends);
+                return friends;
+            });
+    }
+
+    public boolean hasFriend(String username, String friendUsername) {
+        return getFriends(username).contains(friendUsername);
     }
 
     @Transactional
     public void addFriend(String fromUser, String toUser) throws NoSuchElementException {
-        var fromAccount = accountRepository.findByUsername(fromUser).orElseThrow();
-        if (!fromAccount.hasFriend(toUser)) {
+        if (!hasFriend(fromUser, toUser)) {
+            var fromAccount = accountRepository.findByUsername(fromUser).orElseThrow();
             var toAccount = accountRepository.findByUsername(toUser).orElseThrow();
 
             var friendship = new Friendship(fromAccount, toAccount);
@@ -46,10 +54,8 @@ public class FriendService {
             fromAccount.addFriend(friendship);
             toAccount.addFriend(friendship);
 
-            stringRedisTemplate.delete(Utils.friendSetKey(fromUser));
-            stringRedisTemplate.delete(Utils.friendSetKey(toUser));
+            redisService.deleteFriendsCache(fromUser, toUser);
         }
-
     }
 
     @Transactional
@@ -63,7 +69,6 @@ public class FriendService {
                 friendship.remove();
                 friendshipRepository.delete(friendship);
             });
-
         friendshipRepository
             .findById(new FriendshipPrimeKey(targetAccount.getId(), sourceAccount.getId()))
             .ifPresent(friendship -> {
@@ -71,15 +76,6 @@ public class FriendService {
                 friendshipRepository.delete(friendship);
             });
 
-        stringRedisTemplate.opsForSet().remove(Utils.friendSetKey(source), target);
-        stringRedisTemplate.opsForSet().remove(Utils.friendSetKey(target), source);
-
+        redisService.deleteFriendsCache(source, target);
     }
-
-    @Transactional
-    public boolean isFriend(String username, String another) throws NoSuchElementException {
-        var account = accountRepository.findByUsername(username).orElseThrow();
-        return account.hasFriend(another);
-    }
-
 }

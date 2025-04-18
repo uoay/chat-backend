@@ -37,7 +37,7 @@ public class Account implements UserDetails {
     private AccountRole role = AccountRole.User;
 
     @CreatedDate
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -115,9 +115,7 @@ public class Account implements UserDetails {
     public Set<String> getFriends() {
         return friendships
             .stream()
-            .map(friendship -> {
-                return friendship.getAnother(username).orElseThrow();
-            })
+            .map(friendship -> friendship.getAnother(username).orElseThrow())
             .collect(Collectors.toSet());
     }
 
@@ -136,7 +134,7 @@ public class Account implements UserDetails {
     public Set<String> getGroups() {
         return groups
             .stream()
-            .map(group -> String.valueOf(group.getId()))
+            .map(ChatGroup::getSearchId)
             .collect(Collectors.toSet());
     }
 
@@ -147,9 +145,4 @@ public class Account implements UserDetails {
     public boolean leaveGroup(ChatGroup group) {
         return groups.remove(group);
     }
-
-    public boolean isInGroup(ChatGroup group) {
-        return groups.contains(group);
-    }
-
 }

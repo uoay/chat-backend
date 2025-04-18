@@ -26,7 +26,7 @@ public class Friendship implements Serializable {
     private Account toAccount;
 
     @CreatedDate
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
     Friendship() {}

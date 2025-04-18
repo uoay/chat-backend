@@ -12,12 +12,15 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "chat_group")
+@Table(name = "chat_group", indexes = { @Index(columnList = "searchId") })
 public class ChatGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
+    private String searchId;
 
     @Column(nullable = false)
     private String displayName;
@@ -42,8 +45,9 @@ public class ChatGroup {
 
     public ChatGroup() {}
 
-    public ChatGroup(Account owner, String displayName) {
+    public ChatGroup(Account owner, String searchId, String displayName) {
         this.owner = owner;
+        this.searchId = searchId;
         this.displayName = displayName;
         members = new HashSet<>();
         members.add(owner);
@@ -52,6 +56,10 @@ public class ChatGroup {
 
     public Integer getId() {
         return id;
+    }
+
+    public String getSearchId() {
+        return searchId;
     }
 
     public String getDisplayName() {

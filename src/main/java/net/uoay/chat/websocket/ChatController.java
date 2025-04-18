@@ -27,15 +27,15 @@ public class ChatController {
         chatService.sendToFriend(principal.getName(), username, msg);
     }
 
-    @MessageMapping("/group/{group_id}")
+    @MessageMapping("/group/{search_id}")
     public void sendToGroup(
-        @DestinationVariable("group_id") Integer id,
+        @DestinationVariable("search_id") String searchId,
         @Payload String msg,
         Principal principal
     ) {
         var username = principal.getName();
-        if (chatGroupService.isInGroup(username, id)) {
-            chatService.sendToGroup(id, msg);
+        if (chatGroupService.isInGroup(username, searchId)) {
+            chatService.sendToGroup(searchId, msg);
         }
     }
 

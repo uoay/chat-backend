@@ -10,3 +10,8 @@ spring:
         redis:
             repositories:
                 enabled: false
+async:
+    executor:
+        core_pool_size: 5
+        max_pool_size: 10
+        queue_capacity: 10

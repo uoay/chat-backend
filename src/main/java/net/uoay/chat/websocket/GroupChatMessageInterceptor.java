@@ -27,9 +27,7 @@ public class GroupChatMessageInterceptor implements ChannelInterceptor {
                 String[] parts = destination.split("/");
                 var principal = accessor.getUser();
                 if (principal != null
-                    && chatGroupService.isInGroup(
-                        principal.getName(), Integer.valueOf(parts[parts.length - 1])
-                    )
+                    && chatGroupService.isInGroup(principal.getName(), parts[parts.length - 1])
                 ) {
                     return message;
                 }

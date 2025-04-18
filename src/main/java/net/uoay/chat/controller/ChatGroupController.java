@@ -24,7 +24,11 @@ public class ChatGroupController {
     @PostMapping("/groups")
     @ResponseStatus(HttpStatus.CREATED)
     public void createGroup(@RequestBody @Valid CreateChatGroupRequest request) {
-        chatGroupService.createGroup(accountService.getUsername(), request.displayName());
+        chatGroupService.createGroup(
+            accountService.getUsername(),
+            request.searchId(),
+            request.displayName()
+        );
     }
 
     @GetMapping("/groups")
@@ -34,24 +38,24 @@ public class ChatGroupController {
 
     @PutMapping("/groups/join")
     public void joinGroup(@RequestBody @Valid ChatGroupRequest request) {
-        chatGroupService.joinGroup(Integer.valueOf(request.id()), accountService.getUsername());
+        chatGroupService.joinGroup(request.id(), accountService.getUsername());
     }
 
     @PutMapping("/groups/leave")
     public void leaveGroup(@RequestBody @Valid ChatGroupRequest request) {
-        chatGroupService.leaveGroup(Integer.valueOf(request.id()), accountService.getUsername());
+        chatGroupService.leaveGroup(request.id(), accountService.getUsername());
     }
 
     @DeleteMapping("groups/delete")
     public void deleteGroup(@RequestBody @Valid ChatGroupRequest request) {
-        chatGroupService.deleteGroup(Integer.valueOf(request.id()), accountService.getUsername());
+        chatGroupService.deleteGroup(request.id(), accountService.getUsername());
     }
 
-    @GetMapping("group/{group_id}/members")
+    @GetMapping("group/{search_id}/members")
     public Set<String> getGroupMembers(
-        @DestinationVariable("group_id") Integer groupId
+        @DestinationVariable("search_id") String searchId
     ) {
-        return chatGroupService.getMembers(groupId);
+        return chatGroupService.getMembers(searchId);
     }
 
 }
