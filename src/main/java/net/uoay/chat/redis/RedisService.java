@@ -22,12 +22,18 @@ public class RedisService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     private static final DefaultRedisScript<Set<String>> getSetScript;
+    private static final DefaultRedisScript<Boolean> addToSetScript;
 
     static {
         getSetScript = new DefaultRedisScript<>();
         getSetScript.setScriptSource(
             new ResourceScriptSource(new ClassPathResource("redis/get_set_if_exist.lua"))
         );
+        addToSetScript = new DefaultRedisScript<>();
+        addToSetScript.setScriptSource(
+            new ResourceScriptSource(new ClassPathResource("redis/add_to_set_if_exist.lua"))
+        );
+        addToSetScript.setResultType(Boolean.class);
     }
 
     public Optional<Set<String>> getSetIfExists(String key) {
@@ -54,15 +60,16 @@ public class RedisService {
         });
     }
 
-    public void deleteFriendsCache(String username1, String username2) {
+    public void deleteFromFriendsCache(String username1, String username2) {
         stringRedisTemplate.execute(new SessionCallback<List<Object>>() {
             @Override
             public <K, V> List<Object> execute(
                 RedisOperations<K, V> operations
             ) throws DataAccessException {
                 operations.multi();
-                operations.delete((K) Utils.friendSetKey(username1));
-                operations.delete((K) Utils.friendSetKey(username2));
+                var ops = operations.opsForSet();
+                ops.remove((K) Utils.friendSetKey(username1), username2);
+                ops.remove((K) Utils.friendSetKey(username2), username1);
                 return operations.exec();
             }
         });
@@ -81,5 +88,9 @@ public class RedisService {
                 return operations.exec();
             }
         });
+    }
+
+    public boolean addToSetIfExists(String key, String value) {
+        return stringRedisTemplate.execute(addToSetScript, List.of(key), value);
     }
 }

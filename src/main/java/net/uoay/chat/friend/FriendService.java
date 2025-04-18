@@ -54,7 +54,8 @@ public class FriendService {
             fromAccount.addFriend(friendship);
             toAccount.addFriend(friendship);
 
-            redisService.deleteFriendsCache(fromUser, toUser);
+            redisService.addToSetIfExists(Utils.friendSetKey(fromUser), toUser);
+            redisService.addToSetIfExists(Utils.friendSetKey(toUser), fromUser);
         }
     }
 
@@ -76,6 +77,6 @@ public class FriendService {
                 friendshipRepository.delete(friendship);
             });
 
-        redisService.deleteFriendsCache(source, target);
+        redisService.deleteFromFriendsCache(source, target);
     }
 }

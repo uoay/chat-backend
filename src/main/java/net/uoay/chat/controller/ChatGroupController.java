@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @RestController
@@ -56,6 +57,12 @@ public class ChatGroupController {
         @DestinationVariable("search_id") String searchId
     ) {
         return chatGroupService.getMembers(searchId);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleNoSuchElementException(NoSuchElementException exception) {
+        return "Invalid id";
     }
 
 }

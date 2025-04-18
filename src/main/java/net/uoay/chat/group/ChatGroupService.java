@@ -6,10 +6,14 @@ import net.uoay.chat.redis.RedisService;
 import net.uoay.chat.user.Account;
 import net.uoay.chat.user.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,7 +46,7 @@ public class ChatGroupService {
         chatGroupRepository.save(group);
         owner.joinGroup(group);
 
-        stringRedisTemplate.delete(Utils.chatGroupSetKey(ownerUsername));
+        redisService.addToSetIfExists(Utils.chatGroupSetKey(ownerUsername), searchId);
     }
 
     public Set<String> getGroups(String username) {
@@ -57,13 +61,15 @@ public class ChatGroupService {
     }
 
     @Transactional
-    public void joinGroup(String id, String username) {
+    public void joinGroup(String searchId, String username) throws NoSuchElementException {
+        var group = chatGroupRepository.findBySearchId(searchId).orElseThrow();
         var account = accountRepository.findByUsername(username).orElseThrow();
-        var group = chatGroupRepository.findBySearchId(id).orElseThrow();
+
         group.addMember(account);
         account.joinGroup(group);
 
-        stringRedisTemplate.delete(Utils.chatGroupSetKey(username));
+        redisService.addToSetIfExists(Utils.chatGroupSetKey(username), searchId);
+        redisService.addToSetIfExists(Utils.chatGroupMemberSetKey(searchId), username);
     }
 
     @Transactional
@@ -74,7 +80,7 @@ public class ChatGroupService {
             group.removeMember(account);
             account.leaveGroup(group);
 
-            stringRedisTemplate.delete(Utils.chatGroupSetKey(username));
+            stringRedisTemplate.opsForSet().remove(Utils.chatGroupSetKey(username), searchId);
         }
     }
 
@@ -90,13 +96,26 @@ public class ChatGroupService {
         if (group.isOwner(account)) {
             var members = group.getMembers();
             stringRedisTemplate.delete(Utils.chatGroupMemberSetKey(group.getSearchId()));
-            members.forEach(a -> a.leaveGroup(group));
+            for (var member : members) {
+                member.leaveGroup(group);
+            }
             chatGroupRepository.delete(group);
-            List<String> list = members
-                .stream()
-                .map(a -> Utils.chatGroupSetKey(a.getUsername()))
-                .toList();
-            redisService.deleteKeys(list);
+            stringRedisTemplate.execute(new SessionCallback<List<Object>>() {
+                @Override
+                public <K, V> List<Object> execute(
+                    RedisOperations<K, V> operations
+                ) throws DataAccessException {
+                    operations.multi();
+                    var ops = operations.opsForSet();
+                    for (var member: members) {
+                        ops.remove(
+                            (K) Utils.chatGroupSetKey(member.getUsername()),
+                            searchId
+                        );
+                    }
+                    return operations.exec();
+                }
+            });
         }
     }
 
