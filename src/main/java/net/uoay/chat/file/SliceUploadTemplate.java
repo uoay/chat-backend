@@ -2,8 +2,6 @@ package net.uoay.chat.file;
 
 import net.uoay.chat.util.FileUtils;
 import net.uoay.chat.util.RedisUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 

@@ -8,7 +8,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 
 public class PrivateMessageInterceptor implements ChannelInterceptor {
-
     @Override
     @Nullable
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -16,7 +15,7 @@ public class PrivateMessageInterceptor implements ChannelInterceptor {
 
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
             var destination = accessor.getDestination();
-            if (destination !=null && destination.endsWith("private")) {
+            if (destination != null && destination.endsWith("private")) {
                 var principal = accessor.getUser();
                 if (principal != null
                     && destination.equals("/user/" + principal.getName() + "/private")
@@ -28,5 +27,4 @@ public class PrivateMessageInterceptor implements ChannelInterceptor {
         }
         return message;
     }
-
 }

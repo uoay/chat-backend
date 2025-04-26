@@ -1,6 +1,10 @@
 package net.uoay.chat.friend;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.uoay.chat.user.Account;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,6 +13,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Data
+@NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "user_friendship")
@@ -27,19 +33,14 @@ public class Friendship implements Serializable {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    @Setter(AccessLevel.NONE)
     private LocalDateTime createdDate;
-
-    Friendship() {}
 
     Friendship(Account fromAccount, Account toAccount) {
         primeKey = new FriendshipPrimeKey(fromAccount.getId(), toAccount.getId());
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
     };
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
 
     public boolean contains(String username) {
         return fromAccount.getUsername().equals(username)
@@ -59,5 +60,4 @@ public class Friendship implements Serializable {
         fromAccount.removeFriend(this);
         toAccount.removeFriend(this);
     }
-
 }

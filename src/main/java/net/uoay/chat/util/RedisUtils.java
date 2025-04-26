@@ -12,4 +12,16 @@ public class RedisUtils {
     public static String fileNameKey(String username, String uuid) {
         return "file:name:" + username + ":" + uuid;
     }
+
+    public static String friendSetKey(String username) {
+        return username + ":friendSet";
+    }
+
+    public static String chatGroupSetKey(String username) {
+        return username + ":chatGroupSet";
+    }
+
+    public static String chatGroupMemberSetKey(String groupId) {
+        return "chatGroupMemberSet:" + groupId;
+    }
 }

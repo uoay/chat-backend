@@ -1,11 +1,11 @@
 package net.uoay.chat.request;
 
 import jakarta.validation.constraints.Pattern;
-import net.uoay.chat.Utils;
+import net.uoay.chat.util.ValidUtils;
 
 public record CreateChatGroupRequest(
-    @Pattern(regexp = Utils.groupSearchIdPattern, message = Utils.groupSearchIdInvalidMessage)
+    @Pattern(regexp = ValidUtils.groupSearchIdPattern, message = ValidUtils.groupSearchIdInvalidMessage)
     String searchId,
-    @Pattern(regexp = Utils.displayNamePattern, message = Utils.displayNameInvalidMessage)
+    @Pattern(regexp = ValidUtils.displayNamePattern, message = ValidUtils.displayNameInvalidMessage)
     String displayName
 ) {}

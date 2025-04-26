@@ -1,9 +1,9 @@
 package net.uoay.chat.controller;
 
 import jakarta.validation.Valid;
-import net.uoay.chat.Utils;
 import net.uoay.chat.user.AccountService;
 import net.uoay.chat.user.Profile;
+import net.uoay.chat.util.ValidUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +23,7 @@ public class AccountController {
     public Profile getProfile(
         @RequestBody String username
     ) throws NoSuchElementException, IllegalArgumentException {
-        if (username.matches(Utils.usernamePattern)) {
+        if (username.matches(ValidUtils.usernamePattern)) {
             return accountService.getProfile(username).orElseThrow();
         }
         throw new IllegalArgumentException();

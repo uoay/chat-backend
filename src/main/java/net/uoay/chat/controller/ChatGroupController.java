@@ -15,7 +15,6 @@ import java.util.Set;
 
 @RestController
 public class ChatGroupController {
-
     @Autowired
     ChatGroupService chatGroupService;
 
@@ -64,5 +63,4 @@ public class ChatGroupController {
     public String handleNoSuchElementException(NoSuchElementException exception) {
         return "Invalid id";
     }
-
 }

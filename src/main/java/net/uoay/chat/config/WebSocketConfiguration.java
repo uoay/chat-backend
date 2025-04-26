@@ -17,7 +17,6 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @EnableWebSocketMessageBroker
 @EnableScheduling
 public class WebSocketConfiguration extends AbstractSessionWebSocketMessageBrokerConfigurer<Session> {
-
     @Autowired
     private ChatGroupService chatGroupService;
 
@@ -42,5 +41,4 @@ public class WebSocketConfiguration extends AbstractSessionWebSocketMessageBroke
             new GroupChatMessageInterceptor(chatGroupService)
         );
     }
-
 }

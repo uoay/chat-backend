@@ -1,6 +1,10 @@
 package net.uoay.chat.user;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.uoay.chat.friend.Friendship;
 import net.uoay.chat.group.ChatGroup;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Data
+@NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "user_account", indexes = { @Index(columnList = "username") })
@@ -20,6 +26,7 @@ public class Account implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     @Column(nullable = false, unique = true)
@@ -38,14 +45,17 @@ public class Account implements UserDetails {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    @Setter(AccessLevel.NONE)
     private LocalDateTime createdDate;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @Column
+    @Setter(AccessLevel.NONE)
     private Set<Friendship> friendships;
 
     @ManyToMany
     @Column
+    @Setter(AccessLevel.NONE)
     private Set<ChatGroup> groups;
 
     @Override
@@ -60,8 +70,6 @@ public class Account implements UserDetails {
     public int hashCode() {
         return username.hashCode();
     }
-
-    public Account() {}
 
     public Account(String username, String password, Profile profile) {
         this.username = username;
@@ -81,35 +89,15 @@ public class Account implements UserDetails {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Profile getProfile() {
-        return profile;
     }
 
     public void setProfile(Profile profile) {
         this.profile.setDisplayName(profile.getDisplayName());
         profile.getSex().ifPresent(sex -> this.profile.setSex(sex));
         profile.getBirthday().ifPresent(birthday -> this.profile.setBirthday(birthday));
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public Set<String> getFriends() {
@@ -125,10 +113,6 @@ public class Account implements UserDetails {
 
     public boolean removeFriend(Friendship friendship) {
         return friendships.remove(friendship);
-    }
-
-    public boolean hasFriend(String username) {
-        return getFriends().contains(username);
     }
 
     public Set<String> getGroups() {

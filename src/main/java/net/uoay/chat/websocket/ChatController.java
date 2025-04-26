@@ -11,7 +11,6 @@ import java.security.Principal;
 
 @Controller
 public class ChatController {
-
     @Autowired
     private ChatService chatService;
 
@@ -38,5 +37,4 @@ public class ChatController {
             chatService.sendToGroup(searchId, msg);
         }
     }
-
 }

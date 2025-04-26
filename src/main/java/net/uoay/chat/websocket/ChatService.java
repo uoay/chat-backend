@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChatService {
-
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -23,5 +22,4 @@ public class ChatService {
     public void sendToGroup(String to, String msg) {
         messagingTemplate.convertAndSend("/group/" + to, msg);
     }
-
 }

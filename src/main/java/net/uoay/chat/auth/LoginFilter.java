@@ -12,7 +12,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-
     public LoginFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
@@ -48,5 +47,4 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         setDetails(request, authRequest);
         return getAuthenticationManager().authenticate(authRequest);
     }
-
 }

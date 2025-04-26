@@ -9,7 +9,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 
 public class GroupChatMessageInterceptor implements ChannelInterceptor {
-
     private final ChatGroupService chatGroupService;
 
     public GroupChatMessageInterceptor(ChatGroupService chatGroupService) {

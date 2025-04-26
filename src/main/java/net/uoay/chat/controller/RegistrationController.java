@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/register")
 public class RegistrationController {
-
     @Autowired
     private RegistrationService registrationService;
 
@@ -27,5 +26,4 @@ public class RegistrationController {
     public String handleIllegalStateException(IllegalStateException exception) {
         return exception.getMessage();
     }
-
 }

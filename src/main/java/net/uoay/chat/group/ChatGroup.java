@@ -2,6 +2,10 @@ package net.uoay.chat.group;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.uoay.chat.user.Account;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,13 +14,15 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "chat_group", indexes = { @Index(columnList = "searchId") })
 public class ChatGroup {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     @Column(nullable = false)
@@ -41,9 +47,8 @@ public class ChatGroup {
     @CreatedDate
     @Column(nullable = false)
     @JsonIgnore
+    @Setter(AccessLevel.NONE)
     private LocalDateTime createdDate;
-
-    public ChatGroup() {}
 
     public ChatGroup(Account owner, String searchId, String displayName) {
         this.owner = owner;
@@ -52,26 +57,6 @@ public class ChatGroup {
         members = new HashSet<>();
         members.add(owner);
         admins = new HashSet<>();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getSearchId() {
-        return searchId;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
     }
 
     public boolean addMember(Account account) {
@@ -112,9 +97,4 @@ public class ChatGroup {
     public boolean contains(Account account) {
         return members.contains(account);
     }
-
-    public Set<Account> getMembers() {
-        return members;
-    }
-
 }

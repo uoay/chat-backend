@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class HttpRequestExceptionHandler {
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
@@ -32,5 +31,4 @@ public class HttpRequestExceptionHandler {
     public String handleIllegalArgumentException() {
         return "illegal argument(s)";
     }
-
 }

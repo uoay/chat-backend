@@ -31,7 +31,6 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration {
-
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
 
@@ -115,5 +114,4 @@ public class WebSecurityConfiguration {
 
         return filter;
     }
-
 }

@@ -1,6 +1,6 @@
 package net.uoay.chat.redis;
 
-import net.uoay.chat.Utils;
+import net.uoay.chat.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
@@ -68,8 +68,8 @@ public class RedisService {
             ) throws DataAccessException {
                 operations.multi();
                 var ops = operations.opsForSet();
-                ops.remove((K) Utils.friendSetKey(username1), username2);
-                ops.remove((K) Utils.friendSetKey(username2), username1);
+                ops.remove((K) RedisUtils.friendSetKey(username1), username2);
+                ops.remove((K) RedisUtils.friendSetKey(username2), username1);
                 return operations.exec();
             }
         });

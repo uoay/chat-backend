@@ -1,10 +1,8 @@
 package net.uoay.chat.friend;
 
-import net.uoay.chat.Utils;
 import net.uoay.chat.redis.RedisService;
 import net.uoay.chat.user.AccountRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.uoay.chat.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -30,11 +28,11 @@ public class FriendService {
 
     public Set<String> getFriends(String username) {
         return redisService
-            .getSetIfExists(Utils.friendSetKey(username))
+            .getSetIfExists(RedisUtils.friendSetKey(username))
             .orElseGet(() -> {
                 var account =  accountRepository.findByUsername(username).orElseThrow();
                 var friends = account.getFriends();
-                redisService.createStringSet(Utils.friendSetKey(username), friends);
+                redisService.createStringSet(RedisUtils.friendSetKey(username), friends);
                 return friends;
             });
     }
@@ -54,8 +52,8 @@ public class FriendService {
             fromAccount.addFriend(friendship);
             toAccount.addFriend(friendship);
 
-            redisService.addToSetIfExists(Utils.friendSetKey(fromUser), toUser);
-            redisService.addToSetIfExists(Utils.friendSetKey(toUser), fromUser);
+            redisService.addToSetIfExists(RedisUtils.friendSetKey(fromUser), toUser);
+            redisService.addToSetIfExists(RedisUtils.friendSetKey(toUser), fromUser);
         }
     }
 

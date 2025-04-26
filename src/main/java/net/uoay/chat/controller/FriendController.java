@@ -12,7 +12,6 @@ import java.util.Set;
 
 @RestController
 public class FriendController {
-
     @Autowired
     private AccountService accountService;
 
@@ -44,5 +43,4 @@ public class FriendController {
     public String handleNoSuchElementException(NoSuchElementException exception) {
         return "Invalid username";
     }
-
 }
